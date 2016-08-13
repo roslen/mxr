@@ -5,11 +5,17 @@ Version: 0.1.0
 Authors@R: person("Roslen", "Anacleto", email = "roslen@gmail.com",
                role = c("aut", "cre"))
 Maintainer: Roslen Anacleto <roslen@gmail.com>
-Description: This package contains the building blocks of a mixed linear model GWAS that uses
-    EMMAX at its core as the GWAS application. The functions exported
+Description: This package contains the building blocks of a mixed linear model
+   GWAS that uses EMMAX at its core as the GWAS application. Using mxr requires
+   several helper or core applications that need to be installed. Warning or
+   error messages will be issued whenever these applications were not found
+   at run time. By design, the execution should terminate gracefully. Otherwise,
+   please report it to the author.
 License: MIT + LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
 Depends: R (>= 3.2.2)
 Date/Publication: 2016-08-13 21:06:01
+URL: http://github.com/roslen/mxr
+BugReports: http://github.com/roslen/mxr/issues
 
