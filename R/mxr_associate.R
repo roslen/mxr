@@ -36,7 +36,8 @@
 mxr_associate <- function(tped_prefix, pheno_file, kin_file,
                           out_prefix, cov_file="", verbose=F) {
    if (cov_file != "")
-      not_found <- which(!file.exists(c(tped_prefix, pheno_file, kin_file, cov_file)))
+      not_found <- which(!file.exists(c(paste(tped_prefix,c("tped","tfam"),sep="."),
+                                        pheno_file, kin_file, cov_file)))
    else
       not_found <- which(!file.exists(c(tped_prefix, pheno_file, kin_file)))
 
