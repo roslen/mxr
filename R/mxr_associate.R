@@ -42,7 +42,7 @@ mxr_associate <- function(tped_prefix, pheno_file, kin_file,
 
    # Check which parameter file is not found on disk
    if (length(missing)>0)
-      stop(paste(paste(c(tped_prefiix, pheno_file, kin_file)[not_found], collapse=","),
+      stop(paste(paste(c(tped_prefix, pheno_file, kin_file)[not_found], collapse=","),
                  "not found."))
 
    OUTPUT_DIRECTORY <- dirname(out_prefix)
