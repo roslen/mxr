@@ -12,9 +12,9 @@
 #'
 #' @param tped_prefix The path to the transposed '12' recoded plink file. The A1
 #'   allele (the minor allele -- or effect allele) is recoded as "1", while A2
-#'   allele is recoded as "2". The complete call to plink is \code{"plink2
+#'   allele is recoded as "2". The complete call to plink is \code{'plink2
 #'   --bfile [bed_prefix] --recode12 --output-missing-genotype 0 --transpose
-#'   --out [tped_prefix]"}.
+#'   --out [tped_prefix]'}.
 #' @param pheno_file The path to the phenotype file. There are three required
 #'   columns: FID (family ID), IID (individual ID), and phenotype column. It is
 #'   recommended that the phenotype column be approximately normally
@@ -23,7 +23,7 @@
 #'   in the genotype file. Missing phenotype values must be represented as 'NA'.
 #' @param kin_file The path to the kinship matrix file computed using emmax-kin.
 #'   Use the Balding-Nichols algorithm. Generate the kinship matrix by a call to
-#'   emmax-kin \code{"emmax-kin-intel64 -v -d 10 [tped_prefix]"}.
+#'   emmax-kin \code{'emmax-kin-intel64 -v -d 10 [tped_prefix]'}.
 #' @param out_prefix Path and prefix of the output files.
 #' @param cov_file (Optional) Path to the covariate file. The first two columns
 #'   of the covariate file must be the FID and IID of the samples. The third

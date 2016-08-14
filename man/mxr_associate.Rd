@@ -10,9 +10,9 @@ mxr_associate(tped_prefix, pheno_file, kin_file, out_prefix, cov_file = "",
 \arguments{
 \item{tped_prefix}{The path to the transposed '12' recoded plink file. The A1
 allele (the minor allele -- or effect allele) is recoded as "1", while A2
-allele is recoded as "2". The complete call to plink is \code{"plink2
+allele is recoded as "2". The complete call to plink is \code{'plink2
 --bfile [bed_prefix] --recode12 --output-missing-genotype 0 --transpose
---out [tped_prefix]"}.}
+--out [tped_prefix]'}.}
 
 \item{pheno_file}{The path to the phenotype file. There are three required
 columns: FID (family ID), IID (individual ID), and phenotype column. It is
@@ -23,7 +23,7 @@ in the genotype file. Missing phenotype values must be represented as 'NA'.}
 
 \item{kin_file}{The path to the kinship matrix file computed using emmax-kin.
 Use the Balding-Nichols algorithm. Generate the kinship matrix by a call to
-emmax-kin \code{"emmax-kin-intel64 -v -d 10 [tped_prefix]"}.}
+emmax-kin \code{'emmax-kin-intel64 -v -d 10 [tped_prefix]'}.}
 
 \item{out_prefix}{Path and prefix of the output files.}
 
