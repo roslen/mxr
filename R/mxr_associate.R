@@ -61,6 +61,9 @@ mxr_associate <- function(tped_prefix, pheno_file, kin_file,
    OUTPUT_PREFIX <- basename(out_prefix)
    EMMAX2 <- findApplication("emmax2")
 
+   cat(paste(OUTPUT_DIRECTORY, OUTPUT_PREFIX, EMMAX2, sep=", "))
+   return(T)
+
    # Run the association
    result = tryCatch({
       system(paste(EMMAX2, ifelse(verbose, "-v", ""), "-d 10",
