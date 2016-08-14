@@ -38,7 +38,7 @@ mxr_associate <- function(tped_prefix, pheno_file, kin_file,
    if (cov_file != "")
       not_found <- which(!file.exists(c(tped_prefix, pheno_file, kin_file, cov_file)))
    else
-      not_found <- which(!file.exists(c(tped_prefiix, pheno_file, kin_file)))
+      not_found <- which(!file.exists(c(tped_prefix, pheno_file, kin_file)))
 
    # Check which parameter file is not found on disk
    if (length(missing)>0)
