@@ -32,6 +32,7 @@
 #' @param verbose (Optional) Show verbose output. (DEFAULT=FALSE)
 #' @return TRUE if the EMMAX run completed successfully. FALSE, otherwise.
 #'
+#' @export
 mxr_associate <- function(tped_prefix, pheno_file, kin_file,
                           out_prefix, cov_file="", verbose=F) {
    if (cov_file != "")
