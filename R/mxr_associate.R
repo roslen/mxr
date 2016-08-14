@@ -35,16 +35,27 @@
 #' @export
 mxr_associate <- function(tped_prefix, pheno_file, kin_file,
                           out_prefix, cov_file="", verbose=F) {
-   if (cov_file != "")
+   if (cov_file != "") {
       not_found <- which(!file.exists(c(paste(tped_prefix,c("tped","tfam"),sep="."),
                                         pheno_file, kin_file, cov_file)))
-   else
-      not_found <- which(!file.exists(c(tped_prefix, pheno_file, kin_file)))
+   } else {
+      not_found <- which(!file.exists(c(paste(tped_prefix,c("tped","tfam"),sep="."),
+                                        pheno_file, kin_file)))
+   }
 
    # Check which parameter file is not found on disk
-   if (length(missing)>0)
-      stop(paste(paste(c(tped_prefix, pheno_file, kin_file)[not_found], collapse=","),
-                 "not found."))
+   if (length(not_found)>0) {
+      if (cov_file != "") {
+         stop(paste(paste(c(paste(tped_prefix,c("tped","tfam"),sep="."),
+                            pheno_file, kin_file, cov_file)[not_found],
+                          collapse=","),
+                    "not found."))
+      } else {
+         stop(paste(paste(c(paste(tped_prefix,c("tped","tfam"),sep="."),
+                            pheno_file, kin_file)[not_found], collapse=","),
+                    "not found."))
+      }
+   }
 
    OUTPUT_DIRECTORY <- dirname(out_prefix)
    OUTPUT_PREFIX <- basename(out_prefix)
