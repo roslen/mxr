@@ -118,12 +118,32 @@ mxr_clump <- function(emmax2_results,
                                print $0 \"\\t\" a[2] \"\\t\" a[3];}'", "|",
                        SORT, "-k 2n,2 -k 3n,3", "|",
                        AWK, "'{print $1}'",
-                       ">", paste0(out_prefix,".clumped.snps")
+                       ">", paste0(out_prefix, ".clumped.snps")
       )
       # cat (paste0(cmdline,"\n"))
       system(cmd_line)
       if (verbose) cat("DONE.\n")
+
+
+      # Create the REGION_FILE
+      if (verbose) cat("Extracting target SNPs from plink.bim file...")
+      snps <- read.table(paste0(out_prefix,".clumped.snps"),
+                         header = F, stringsAsFactors = F, sep = "\t")
+      bim <- data.table::fread(paste(genotype_prefix,"bim",sep="."),
+                               data.table = F, stringsAsFactors = F)
+      snps_bim <- dplyr::inner_join(snps, bim, by=c("V1"="V2"))
+      rm(bim)
+
+      # Make this the same format as the reference file
+      snps_bim$V1 <- paste("chr", snps_bim$V1, sep="")
+
+      # Write the matching records to disk
+      write.table(snps_bim,
+                  file = paste(out_prefix, ".clumped.snps.target_list"),
+                  append = F, quote = F, sep = "\t", colnames = F, row.names = F)
+      if (verbose) cat("DONE.\n")
    }
+
 
    if (file.exists(paste0(out_prefix,".clumped.ranges"))) {
       if (verbose) cat("Creating a list of the associated or nearby genes...")
@@ -140,9 +160,9 @@ mxr_clump <- function(emmax2_results,
                        SORT, "-k 2n,2 -k 3n,3", "|",
                        UNIQ, "|",
                        AWK, "'{print $1}'",
-                       ">", paste0(out_prefix,".clumped.ranges.snps")
+                       ">", paste0(out_prefix,".clumped.ranges.genes")
       )
-      cat(paste0(cmd_line, "\n"))
+      # cat(paste0(cmd_line, "\n"))
       system(cmd_line)
       if (verbose) cat("DONE.\n")
    }
