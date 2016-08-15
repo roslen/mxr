@@ -66,7 +66,7 @@ mxr_clump <- function(emmax2_results,
    SED <- findApplication("sed")
    TAIL <- findApplication("tail")
    AWK <- findApplication("awk")
-   XARGS <- findapplication("xargs")
+   XARGS <- findApplication("xargs")
    SORT <- findApplication("sort")
 
    # check if PLINK2 is present
