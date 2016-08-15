@@ -103,7 +103,7 @@ mxr_clump <- function(emmax2_results,
 
    # Create a list of significant SNPs sorted by chromosome and position within
    # the chromosome
-   if (file.exists(paste0(output_prefix,".clumped"))) {
+   if (file.exists(paste0(out_prefix,".clumped"))) {
       system(paste(SED, "'/^$/d'", paste0(out_prefix,".clumped"), "|",
                    TAIL, "-n+2", "|",
                    AWK, "'{print $3 \",\" $12}'", "|",
