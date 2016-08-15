@@ -112,7 +112,8 @@ mxr_clump <- function(emmax2_results,
                        XARGS, "|",
                        SED, "-e 's/ /,/g'", "|",
                        SED, "'s/,/\\n/g'", "|",
-                       AWK, "'{split($0, a,\"_\"); print $0 \"\\t\" a[3];}'", "|",
+                       AWK, "'{split($0, a,\"_\");
+                               print $0 \"\\t\" a[2] \"\\t\" a[3];}'", "|",
                        SORT, "-k 2n,2 -k 3n,3", "|",
                        AWK, "'{print $1}'",
                        ">", paste0(out_prefix,".clumped.snps")
