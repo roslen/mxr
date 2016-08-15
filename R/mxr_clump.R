@@ -140,7 +140,7 @@ mxr_clump <- function(emmax2_results,
       # Write the matching records to disk
       write.table(snps_bim,
                   file = paste(out_prefix, ".clumped.snps.target_list"),
-                  append = F, quote = F, sep = "\t", colnames = F, row.names = F)
+                  append = F, quote = F, sep = "\t", col.names = F, row.names = F)
       if (verbose) cat("DONE.\n")
    }
 
