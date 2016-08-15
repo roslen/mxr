@@ -104,19 +104,21 @@ mxr_clump <- function(emmax2_results,
    # Create a list of significant SNPs sorted by chromosome and position within
    # the chromosome
    if (file.exists(paste0(out_prefix,".clumped"))) {
-      system(paste(SED, "'/^$/d'", paste0(out_prefix,".clumped"), "|",
-                   TAIL, "-n+2", "|",
-                   AWK, "'{print $3 \",\" $12}'", "|",
-                   SED, "'s/,NONE//g'", "|",
-                   SED, "'s/(1)//g'", "|",
-                   XARGS, "|",
-                   SED, "-e 's/ /,/g'", "|",
-                   SED, "'s/,/\\n/g'", "|",
-                   AWK, "'{split($0, a,\"_\"); print $0 \"\\t\" a[3];}'", "|",
-                   SORT, "-k 2n,2 -k 3n,3", "|",
-                   AWK, "'{print $1}'",
-                   ">", paste0(out_prefix,".clumped.snps")
-      ))
+      cmdline <- paste(SED, "'/^$/d'", paste0(out_prefix,".clumped"), "|",
+                       TAIL, "-n+2", "|",
+                       AWK, "'{print $3 \",\" $12}'", "|",
+                       SED, "'s/,NONE//g'", "|",
+                       SED, "'s/(1)//g'", "|",
+                       XARGS, "|",
+                       SED, "-e 's/ /,/g'", "|",
+                       SED, "'s/,/\\n/g'", "|",
+                       AWK, "'{split($0, a,\"_\"); print $0 \"\\t\" a[3];}'", "|",
+                       SORT, "-k 2n,2 -k 3n,3", "|",
+                       AWK, "'{print $1}'",
+                       ">", paste0(out_prefix,".clumped.snps")
+      )
+      cat (paste0(cmdline,"\n"))
+      system(cmdline)
    }
    # sed '/^$/d' $1/$1_emmax.ps.qqman.emmax_200kb.clumped | tail -n+2 | awk '{print  $3 "," $12 }' | sed 's/,NONE//g' | sed 's/(1)//g' | xargs | sed -e 's/ /,/g' | sed 's/,/\n/g' | awk '{split($0,a,"_"); print $0 "\t" a[2] "\t" a[3];}' |sort -k 2n,2 -k 3n,3  | awk '{print $1}' > $1/$1_emmax.ps.qqman.emmax_200kb.clumped.snps_list
    #
