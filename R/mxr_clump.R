@@ -135,10 +135,10 @@ mxr_clump <- function(emmax2_results,
       rm(bim)
 
       # Make this the same format as the reference file
-      snps_bim$V1 <- paste("chr", sprintf("%02d", snps_bim$V2), sep="")
+      snps_bim$V2 <- paste("chr", sprintf("%02d", snps_bim$V2), sep="")
 
       # Write the matching records to disk
-      write.table(snps_bim[,c(2, 1, 3:6)],
+      write.table(snps_bim[,c(2, 4, 1, 5:6)],
                   file = paste0(out_prefix, ".clumped.snps.target_list"),
                   append = F, quote = F, sep = "\t", col.names = F, row.names = F)
       if (verbose) cat("DONE.\n")
