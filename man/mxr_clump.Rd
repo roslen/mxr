@@ -2,40 +2,50 @@
 % Please edit documentation in R/mxr_clump.R
 \name{mxr_clump}
 \alias{mxr_clump}
-\title{Post-GWAS Processing of Significant Peak.}
+\title{Post-GWAS Processing of Significant Association Peaks.}
 \usage{
-mxr_clump(tped_prefix, pheno_file, kin_file, out_prefix, cov_file = "",
-  verbose = F)
+mxr_clump(emmax2_results, genotype_prefix, snp_field = "snp_id",
+  clump_field = "p", clump_p1 = 1e-05, clump_p2 = 0.01, clump_kb = 200,
+  clump_r2 = 0.5, clump_range_border_kb = 20, gene_list = "",
+  out_prefix = "", verbose = F)
 }
 \arguments{
-\item{tped_prefix}{The path to the transposed '12' recoded plink file. The A1
-allele (the minor allele -- or effect allele) is recoded as "1", while A2
-allele is recoded as "2". The complete call to plink is \code{'plink2
---bfile [bed_prefix] --recode12 --output-missing-genotype 0 --transpose
---out [tped_prefix]'}.}
+\item{emmax2_results}{The fullpath and filename of the results of
+mxr_associate.}
 
-\item{pheno_file}{The path to the phenotype file. There are three required
-columns: FID (family ID), IID (individual ID), and phenotype column. It is
-recommended that the phenotype column be approximately normally
-distributed, in which case, the warpedLMM software would be very useful.
-IMPORTANT: The samples need to be sorted according to how they are arranged
-in the genotype file. Missing phenotype values must be represented as 'NA'.}
+\item{genotype_prefix}{The fullpath and prefix of the bim/bed/fam plink
+files.}
 
-\item{kin_file}{The path to the kinship matrix file computed using emmax-kin.
-Use the Balding-Nichols algorithm. Generate the kinship matrix by a call to
-emmax-kin \code{'emmax-kin-intel64 -v -d 10 [tped_prefix]'}.}
+\item{snp_field}{The column header for the SNP column in the results file
+from mxr_associate. (Default: "snp_id")}
 
-\item{out_prefix}{Path and prefix of the output files.}
+\item{clump_field}{The column header for the p-value column in the results
+file from mxr_associate. (Default: "p")}
 
-\item{cov_file}{(Optional) Path to the covariate file. The first two columns
-of the covariate file must be the FID and IID of the samples. The third
-column must be a vector of '1'. Quantitative covariates start from the
-fourth column onward.}
+\item{clump_p1}{The maximum p-value of the index variants that define each
+clump. Index variants need to have values between 0 and this p-value.
+(Default: 0.00001)}
+
+\item{clump_p2}{The maximum association p-value of SNPs that belonging to the
+clump formed by an index variant. (Default: 0.01)}
+
+\item{clump_kb}{The maximum distance of a clumped SNP from its index variant.
+(Default: 200)}
+
+\item{clump_r2}{The r-squared value of the clumped SNP with its index
+variant. (Default: 0.50)}
+
+\item{clump_range_border_kb}{The number of kilobases past the region
+clump-range region. (Default: 20)}
+
+\item{gene_list}{The list of genes must have the following columns: chromosome,
+start (bp), end (bp), locus_id. These fields must be tab separated and have an appropriately named column header. The chromosome must be coded to correspond to the plink data.
+@param out_prefix Path and prefix of the output files.}
 
 \item{verbose}{(Optional) Show verbose output. (DEFAULT=FALSE)}
 }
 \value{
-TRUE if the EMMAX run completed successfully. FALSE, otherwise.
+TRUE if the PLINK run completed successfully. FALSE, otherwise.
 }
 \description{
 \code{mxr_clump} determines the clumps of SNPs based on LD along the region

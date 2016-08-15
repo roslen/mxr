@@ -62,6 +62,8 @@ mxr_associate <- function(tped_prefix, pheno_file, kin_file,
    EMMAX2 <- findApplication("emmax2")
    SED <- findApplication("sed")
 
+   if (EMMAX2=="" | SED=="") stop("Either EMMAX or sed are not present.")
+
    # Run the association
    result = tryCatch({
       system(paste(EMMAX2, ifelse(verbose, "-v", ""), "-d 10",

@@ -1,4 +1,4 @@
-#' Post-GWAS Processing of Significant Peak.
+#' Post-GWAS Processing of Significant Association Peaks.
 #'
 #' \code{mxr_clump} determines the clumps of SNPs based on LD along the region
 #' that registers a significant association signal with the phenotype. This uses
@@ -9,29 +9,92 @@
 #' already been called and that the results are successfully obtained without
 #' warnings (that imply fatal errors) or errors.
 #'
-#' @param tped_prefix The path to the transposed '12' recoded plink file. The A1
-#'   allele (the minor allele -- or effect allele) is recoded as "1", while A2
-#'   allele is recoded as "2". The complete call to plink is \code{'plink2
-#'   --bfile [bed_prefix] --recode12 --output-missing-genotype 0 --transpose
-#'   --out [tped_prefix]'}.
-#' @param pheno_file The path to the phenotype file. There are three required
-#'   columns: FID (family ID), IID (individual ID), and phenotype column. It is
-#'   recommended that the phenotype column be approximately normally
-#'   distributed, in which case, the warpedLMM software would be very useful.
-#'   IMPORTANT: The samples need to be sorted according to how they are arranged
-#'   in the genotype file. Missing phenotype values must be represented as 'NA'.
-#' @param kin_file The path to the kinship matrix file computed using emmax-kin.
-#'   Use the Balding-Nichols algorithm. Generate the kinship matrix by a call to
-#'   emmax-kin \code{'emmax-kin-intel64 -v -d 10 [tped_prefix]'}.
-#' @param out_prefix Path and prefix of the output files.
-#' @param cov_file (Optional) Path to the covariate file. The first two columns
-#'   of the covariate file must be the FID and IID of the samples. The third
-#'   column must be a vector of '1'. Quantitative covariates start from the
-#'   fourth column onward.
+#' @param emmax2_results The fullpath and filename of the results of
+#'   mxr_associate.
+#' @param genotype_prefix The fullpath and prefix of the bim/bed/fam plink
+#'   files.
+#' @param snp_field The column header for the SNP column in the results file
+#'   from mxr_associate. (Default: "snp_id")
+#' @param clump_field The column header for the p-value column in the results
+#'   file from mxr_associate. (Default: "p")
+#' @param clump_p1 The maximum p-value of the index variants that define each
+#'   clump. Index variants need to have values between 0 and this p-value.
+#'   (Default: 0.00001)
+#' @param clump_p2 The maximum association p-value of SNPs that belonging to the
+#'   clump formed by an index variant. (Default: 0.01)
+#' @param clump_kb The maximum distance of a clumped SNP from its index variant.
+#'   (Default: 200)
+#' @param clump_r2 The r-squared value of the clumped SNP with its index
+#'   variant. (Default: 0.50)
+#' @param clump_range_border_kb The number of kilobases past the region
+#'   clump-range region. (Default: 20)
+#' @param gene_list The list of genes must have the following columns: chromosome,
+#'   start (bp), end (bp), locus_id. These fields must be tab separated and have an appropriately named column header. The chromosome must be coded to correspond to the plink data.
+#'   @param out_prefix Path and prefix of the output files.
 #' @param verbose (Optional) Show verbose output. (DEFAULT=FALSE)
-#' @return TRUE if the EMMAX run completed successfully. FALSE, otherwise.
+#' @return TRUE if the PLINK run completed successfully. FALSE, otherwise.
 #'
 #' @export
-mxr_clump <- function(tped_prefix, pheno_file, kin_file,
-                          out_prefix, cov_file="", verbose=F) {
+mxr_clump <- function(emmax2_results,
+                      genotype_prefix,
+                      snp_field = "snp_id",
+                      clump_field = "p",
+                      clump_p1 = 0.00001,
+                      clump_p2 = 0.01,
+                      clump_kb = 200,
+                      clump_r2 = 0.50,
+                      clump_range_border_kb = 20,
+                      gene_list = "",
+                      out_prefix = "",
+                      verbose=F) {
+
+   # Get the indices of input files that are not present
+   not_found <- which(!file.exists(c(emmax2_results,
+                                     paste(genotype_prefix,c("bim","bed","fam"),sep="."))))
+
+   # If any of the input files are not present, then stop gracefully.
+   if (length(not_found)>0) {
+      stop(paste(paste(c(emmax2_results,
+                         paste(genotype_prefix,c("bim","bed","fam"),sep="."))[not_found],
+                       collapse=","),
+                 "not found."))
+   }
+
+   OUTPUT_DIRECTORY <- dirname(out_prefix)
+   OUTPUT_PREFIX <- basename(out_prefix)
+   PLINK2 <- findApplication("plink2")
+
+   # check if PLINK2 is present
+   if (PLINK2=="") stop("plink2 is not found.")
+
+   # Run the clump
+   result = tryCatch({
+      system(paste(PLINK2,
+                   "--clump", emmax2_results,
+                   "--bfile", genotype_prefix,
+                   "--make-founders",
+                   "--clump-snp-field", snp_field,
+                   "--clump-field", clump_field,
+                   "--clump-p1", clump_p1,
+                   "--clump-p2", clump_p2,
+                   "--clump-kb", clump_kb,
+                   "--clump-r2", clump_r2,
+                   "--r2 dprime",
+                   ifelse(gene_list!="",
+                          paste("--clump-range", gene_list,
+                                "--clump-range-border", clump_range_border_kb),
+                          ""),
+                   "--out", out_prefix,
+                   ifelse(!verbose,">/dev/null 2>&1","")
+      ))
+   }, warning = function(w) {
+      return ("")
+   }, error = function(e) {
+      stop("")
+   }, finally = {
+      #cleanup-code
+   })
+
+   # If execution managed to reach this line, then everything went well.
+   return (TRUE)
 }
