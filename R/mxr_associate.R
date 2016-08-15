@@ -60,6 +60,7 @@ mxr_associate <- function(tped_prefix, pheno_file, kin_file,
    OUTPUT_DIRECTORY <- dirname(out_prefix)
    OUTPUT_PREFIX <- basename(out_prefix)
    EMMAX2 <- findApplication("emmax2")
+   SED <- findApplication("sed")
 
    # Run the association
    result = tryCatch({
@@ -77,6 +78,15 @@ mxr_associate <- function(tped_prefix, pheno_file, kin_file,
    }, finally = {
       #cleanup-code
    })
+
+
+   # Put headers to the output of emmax
+   if (verbose) cat("Putting the headers into the emmax results...")
+   system(paste(SED,
+                "-i '1isnp_id\tbeta\tSE\tp'",
+                paste0(OUTPUT_DIRECTORY, "/", OUTPUT_PREFIX, ".ps")
+   ))
+   if (verbose) cat("DONE.\n")
 
    # If execution managed to reach this line, then everything went well.
    return (TRUE)
