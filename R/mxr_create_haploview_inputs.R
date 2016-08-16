@@ -1,4 +1,4 @@
-#' Create the Region File from the Clumps.
+#' Create the Haploview Input Files.
 #'
 #' \code{mxr_create_haploview_inputs} creates the input files necessary to run
 #' Haploview.
