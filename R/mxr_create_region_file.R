@@ -61,7 +61,7 @@ mxr_create_region_file <- function(genotype_prefix, reference_alleles = "",
                 AWK, "'{chr=$1; sub(/chr/, \"\", chr); print chr \"\\t\" $1 \"\\t\" $2 \"\\t\" $3;}'", "|",
                 SORT, "-k 1n,1 -k 3n,3", "|",
                 AWK, "'{print $2 \"\\t\" $3 \"\\t\" $4;}'",
-                ">" , paste0(out_prefix, "clumped.snps.alleles_from_reference")
+                ">" , paste0(out_prefix, ".clumped.snps.alleles_from_reference")
    ))
    if (verbose) cat("DONE.\n")
 
