@@ -5,8 +5,8 @@
 \title{Generate the Haploview Plot.}
 \usage{
 mxr_create_haploview_plot(path_to_haploview = "", ped_file = "",
-  info_file = "", max_distance = 200, memory_mb = 2048, out_prefix = "",
-  verbose = FALSE)
+  info_file = "", max_distance_kb = 200, memory_mb = 2048,
+  out_prefix = "", verbose = FALSE)
 }
 \arguments{
 \item{path_to_haploview}{The fullpath to the Haploview.jar.}
@@ -15,10 +15,10 @@ mxr_create_haploview_plot(path_to_haploview = "", ped_file = "",
 
 \item{info_file}{The fullpath to the corresponding INFO file of the PED file.}
 
-\item{max_distance}{The window size in kb of the LD block.}
+\item{max_distance_kb}{The window size in kb of the LD block. (DEFAULT: 200)}
 
 \item{memory_mb}{The memory to set aside for the haploview run.
-(DEFAULT:2048MB)}
+(DEFAULT: 2048)}
 
 \item{out_prefix}{The output prefix for the generated files.}
 

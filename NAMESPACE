@@ -2,6 +2,7 @@
 
 export(mxr_associate)
 export(mxr_clump)
+export(mxr_create_annovar_inputs)
 export(mxr_create_haploview_inputs)
 export(mxr_create_haploview_plot)
 export(mxr_create_region_file)
