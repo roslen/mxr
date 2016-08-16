@@ -48,6 +48,8 @@ mxr_create_region_file <- function(genotype_prefix, reference_alleles = "",
    bim <- data.table::fread(paste(genotype_prefix,"bim",sep="."),
                             data.table = F, stringsAsFactors = F)
    snps_bim <- dplyr::inner_join(snps, bim, by=c("V1"="V2"))
+
+   # re-claim memory
    rm(bim)
 
    # Make this the same format as the reference file
@@ -59,6 +61,8 @@ mxr_create_region_file <- function(genotype_prefix, reference_alleles = "",
                append = F, quote = F, sep = "\t", col.names = F, row.names = F)
    if (verbose) cat("DONE.\n")
 
+   # reclaim memory
+   rm(list=c("snps","snps_bim"))
 
    if (verbose) cat("Extracting the corresponding regions in the genome...")
    system(paste(TABIX, "-s1 -b2 -e2", reference_alleles,
