@@ -49,7 +49,9 @@ mxr_create_haploview_inputs <- function(genotype_prefix, snps_list = "",
 
    # generate haploview batch input files
    if (verbose) cat("Creating haploview input files...")
-   system(paste(FIND, OUTPUT_DIRECTORY, "-name '*.ped'",
+   system(paste(FIND, OUTPUT_DIRECTORY,
+                "-maxdepth 1",
+                "-name '*.ped'",
                 "-o -name '*.info'", "|",
                 SORT, "|",
                 PASTE, "-s -d ' \\n'", "|",
