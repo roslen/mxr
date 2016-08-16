@@ -135,7 +135,7 @@ mxr_clump <- function(emmax2_results,
       rm(bim)
 
       # Make this the same format as the reference file
-      snps_bim[,2] <- paste("chr", sprintf("%02d", snps_bim[,2,drop=F]), sep="")
+      snps_bim[,2] <- paste("chr", sprintf("%02d", snps_bim[,2]), sep="")
 
       # Write the matching records to disk
       write.table(snps_bim[,c(2, 4, 1, 5:6)],
