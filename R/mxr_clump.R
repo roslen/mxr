@@ -69,6 +69,7 @@ mxr_clump <- function(emmax2_results,
    XARGS <- findApplication("xargs")
    SORT <- findApplication("sort")
    UNIQ <- findApplication("uniq")
+   TABIX <- findApplication("tabix")
 
    # check if PLINK2 is present
    if (PLINK2=="") stop("plink2 is not found.")
@@ -130,8 +131,7 @@ mxr_clump <- function(emmax2_results,
       snps <- read.table(paste0(out_prefix,".clumped.snps"),
                          header = F, stringsAsFactors = F, sep = "\t")
       bim <- data.table::fread(paste(genotype_prefix,"bim",sep="."),
-                               data.table = F, stringsAsFactors = F,
-                               verbose = verbose)
+                               data.table = F, stringsAsFactors = F)
       snps_bim <- dplyr::inner_join(snps, bim, by=c("V1"="V2"))
       rm(bim)
 
@@ -142,6 +142,17 @@ mxr_clump <- function(emmax2_results,
       write.table(snps_bim[,c(2, 4, 1, 5:6)],
                   file = paste0(out_prefix, ".clumped.snps.target_list"),
                   append = F, quote = F, sep = "\t", col.names = F, row.names = F)
+      if (verbose) cat("DONE.\n")
+
+
+      if (verbose) cat("Extracting the corresponding regions in the genome...")
+      system(paste(TABIX, "-s1 -b2 -e2", gene_list,
+                   "-R", paste0(out_prefix, ".clumped.snps.target_list"), "|",
+                   AWK, "'{chr=$1; sub(/chr/, \"\", chr); print chr \"\\t\" $1 \"\\t\" $2 \"\\t\" $3;}'", "|",
+                   SORT, "-k 1n,1 -k 3n,3", "|",
+                   AWK, "'{print $2 \"\\t\" $3 \"\\t\" $4;}'",
+                   ">" , paste0(out_prefix, "clumped.snps.alleles_from_reference")
+      ))
       if (verbose) cat("DONE.\n")
    }
 
