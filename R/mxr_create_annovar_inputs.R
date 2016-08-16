@@ -64,7 +64,7 @@ mxr_create_annovar_inputs <- function(target_list = "",
    system(paste(CAT, paste0(out_prefix,".avinput"), "|",
                 SED, "'s/chr0/Chr/g'", "|",
                 SED, "'s/chr/Chr/g'", ">",
-                paste0(out_prefix,".avinput","corrected_chroms")
+                paste0(out_prefix,".avinput",".corrected_chroms")
    ))
    if (verbose) cat("DONE.\n")
 
