@@ -53,7 +53,7 @@ mxr_create_annovar_inputs <- function(target_list = "",
    # Proceed with the rest of the script
    if (verbose) cat("Creating the annotation input file...")
    system(paste(CAT, paste0(out_prefix, ".alleles_from_reference_target_list"), "|",
-                AWK, "'{split($3,a,"="); if (a[2] != $6) print $1 \"\\t\" $2 \"\\t\" $2 \"\\t\" a[2] \"\\t\" $6 \"\\t\" \";A1 in .bim is reference allele.\"; else print $1 \"\\t\" $2 \"\\t\" $2 \"\\t\" a[2] \"\\t\" $5 \"\\t\" \"\"; }'", ">",
+                AWK, "'{split($3,a,\"=\"); if (a[2] != $6) print $1 \"\\t\" $2 \"\\t\" $2 \"\\t\" a[2] \"\\t\" $6 \"\\t\" \";A1 in .bim is reference allele.\"; else print $1 \"\\t\" $2 \"\\t\" $2 \"\\t\" a[2] \"\\t\" $5 \"\\t\" \"\"; }'", ">",
                 paste0(out_prefix,".avinput")
    ))
    if (verbose) cat("DONE.\n")
