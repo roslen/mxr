@@ -46,7 +46,7 @@ mxr_clump <- function(emmax2_results,
                       clump_range_border_kb = 20,
                       gene_list = "",
                       out_prefix = "",
-                      verbose=F) {
+                      verbose = FALSE) {
 
    # Get the indices of input files that are not present
    not_found <- which(!file.exists(c(emmax2_results,
@@ -130,7 +130,8 @@ mxr_clump <- function(emmax2_results,
       snps <- read.table(paste0(out_prefix,".clumped.snps"),
                          header = F, stringsAsFactors = F, sep = "\t")
       bim <- data.table::fread(paste(genotype_prefix,"bim",sep="."),
-                               data.table = F, stringsAsFactors = F)
+                               data.table = F, stringsAsFactors = F,
+                               verbose = verbose)
       snps_bim <- dplyr::inner_join(snps, bim, by=c("V1"="V2"))
       rm(bim)
 
