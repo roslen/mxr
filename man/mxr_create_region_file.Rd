@@ -5,7 +5,7 @@
 \title{Create the Region File from the Clumps.}
 \usage{
 mxr_create_region_file(genotype_prefix, reference_alleles = "",
-  out_prefix = "", verbose = FALSE)
+  clumped_snps = "", out_prefix = "", verbose = FALSE)
 }
 \arguments{
 \item{genotype_prefix}{The fullpath and prefix of the bim/bed/fam plink
@@ -15,6 +15,10 @@ files.}
 SNP. It has three mandatory columns: chr, bp, Ref_allele. Chr column may
 have values like "chr01"..."chr12", bp are just the base pair positions of
 the SNPs, and the Ref_allele column is formatted as "Ref=<nuc>".}
+
+\item{clumped_snps}{These are contained in the file outputted by
+\code{mxr_extract_clumped_snps()}. That function needs to be run first
+prior to this.}
 
 \item{out_prefix}{Path and prefix of the output files.}
 
