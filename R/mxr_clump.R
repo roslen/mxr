@@ -63,13 +63,6 @@ mxr_clump <- function(emmax2_results,
    OUTPUT_DIRECTORY <- dirname(out_prefix)
    OUTPUT_PREFIX <- basename(out_prefix)
    PLINK2 <- findApplication("plink2")
-   SED <- findApplication("sed")
-   TAIL <- findApplication("tail")
-   AWK <- findApplication("awk")
-   XARGS <- findApplication("xargs")
-   SORT <- findApplication("sort")
-   UNIQ <- findApplication("uniq")
-   TABIX <- findApplication("tabix")
 
    # check if PLINK2 is present
    if (PLINK2=="") stop("plink2 is not found.")
@@ -101,84 +94,6 @@ mxr_clump <- function(emmax2_results,
    }, finally = {
       #cleanup-code
    })
-
-
-   # Create a list of significant SNPs sorted by chromosome and position within
-   # the chromosome
-   if (file.exists(paste0(out_prefix,".clumped"))) {
-      if (verbose) cat("Extracting the significant SNPs...")
-      cmd_line <- paste(SED, "'/^$/d'", paste0(out_prefix,".clumped"), "|",
-                       TAIL, "-n+2", "|",
-                       AWK, "'{print $3 \",\" $12}'", "|",
-                       SED, "'s/,NONE//g'", "|",
-                       SED, "'s/(1)//g'", "|",
-                       XARGS, "|",
-                       SED, "-e 's/ /,/g'", "|",
-                       SED, "'s/,/\\n/g'", "|",
-                       AWK, "'{split($0, a,\"_\");
-                               print $0 \"\\t\" a[2] \"\\t\" a[3];}'", "|",
-                       SORT, "-k 2n,2 -k 3n,3", "|",
-                       AWK, "'{print $1}'",
-                       ">", paste0(out_prefix, ".clumped.snps")
-      )
-      # cat (paste0(cmdline,"\n"))
-      system(cmd_line)
-      if (verbose) cat("DONE.\n")
-
-
-      # Create the REGION_FILE
-      if (verbose) cat("Extracting target SNPs from plink.bim file...")
-      snps <- read.table(paste0(out_prefix,".clumped.snps"),
-                         header = F, stringsAsFactors = F, sep = "\t")
-      bim <- data.table::fread(paste(genotype_prefix,"bim",sep="."),
-                               data.table = F, stringsAsFactors = F)
-      snps_bim <- dplyr::inner_join(snps, bim, by=c("V1"="V2"))
-      rm(bim)
-
-      # Make this the same format as the reference file
-      snps_bim[,2] <- paste("chr", sprintf("%02d", snps_bim[,2]), sep="")
-
-      # Write the matching records to disk
-      write.table(snps_bim[,c(2, 4, 1, 5:6)],
-                  file = paste0(out_prefix, ".clumped.snps.target_list"),
-                  append = F, quote = F, sep = "\t", col.names = F, row.names = F)
-      if (verbose) cat("DONE.\n")
-
-
-      if (verbose) cat("Extracting the corresponding regions in the genome...")
-      system(paste(TABIX, "-s1 -b2 -e2", gene_list,
-                   "-R", paste0(out_prefix, ".clumped.snps.target_list"), "|",
-                   AWK, "'{chr=$1; sub(/chr/, \"\", chr); print chr \"\\t\" $1 \"\\t\" $2 \"\\t\" $3;}'", "|",
-                   SORT, "-k 1n,1 -k 3n,3", "|",
-                   AWK, "'{print $2 \"\\t\" $3 \"\\t\" $4;}'",
-                   ">" , paste0(out_prefix, "clumped.snps.alleles_from_reference")
-      ))
-      if (verbose) cat("DONE.\n")
-   }
-
-
-   if (file.exists(paste0(out_prefix,".clumped.ranges"))) {
-      if (verbose) cat("Creating a list of the associated or nearby genes...")
-      cmd_line <- paste(SED, "'/^$/d'", paste0(out_prefix,".clumped.ranges"), "|",
-                       TAIL, "-n+2", "|",
-                       AWK, "'{print  $7}'", "|",
-                       SED, "'s/[][]//g'", "|",
-                       XARGS, "|",
-                       SED, "'s/ /,/g'", "|",
-                       SED, "'s/,/\\n/g'", "|",
-                       AWK, "'{loci=$0; sub(/LOC_Os/,\"\",loci);
-                               split(loci,a,\"g\");
-                               print $0 \"\\t\" a[1] \"\\t\" a[2]}'", "|",
-                       SORT, "-k 2n,2 -k 3n,3", "|",
-                       UNIQ, "|",
-                       AWK, "'{print $1}'",
-                       ">", paste0(out_prefix,".clumped.ranges.genes")
-      )
-      # cat(paste0(cmd_line, "\n"))
-      system(cmd_line)
-      if (verbose) cat("DONE.\n")
-   }
-
 
    # If execution managed to reach this line, then everything went well.
    return (TRUE)

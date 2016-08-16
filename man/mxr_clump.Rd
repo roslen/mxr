@@ -6,8 +6,8 @@
 \usage{
 mxr_clump(emmax2_results, genotype_prefix, snp_field = "snp_id",
   clump_field = "p", clump_p1 = 1e-05, clump_p2 = 0.01, clump_kb = 200,
-  clump_r2 = 0.5, clump_range_border_kb = 20, gene_list = "",
-  out_prefix = "", verbose = F)
+  clump_r2 = 0.8, clump_range_border_kb = 20, gene_list = "",
+  out_prefix = "", verbose = FALSE)
 }
 \arguments{
 \item{emmax2_results}{The fullpath and filename of the results of

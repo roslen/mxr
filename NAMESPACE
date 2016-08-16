@@ -2,3 +2,6 @@
 
 export(mxr_associate)
 export(mxr_clump)
+export(mxr_create_region_file)
+export(mxr_extract_clumped_genes)
+export(mxr_extract_clumped_snps)
