@@ -56,7 +56,7 @@ mxr_create_region_file <- function(genotype_prefix, reference_alleles = "",
 
 
    if (verbose) cat("Extracting the corresponding regions in the genome...")
-   system(paste(TABIX, "-s1 -b2 -e2", gene_list,
+   system(paste(TABIX, "-s1 -b2 -e2", reference_alleles,
                 "-R", paste0(out_prefix, ".clumped.snps.target_list"), "|",
                 AWK, "'{chr=$1; sub(/chr/, \"\", chr); print chr \"\\t\" $1 \"\\t\" $2 \"\\t\" $3;}'", "|",
                 SORT, "-k 1n,1 -k 3n,3", "|",
