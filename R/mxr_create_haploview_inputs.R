@@ -63,3 +63,4 @@ mxr_create_haploview_inputs <- function(genotype_prefix, snps_list = "",
    # If execution managed to reach this line, then everything went well.
    return (TRUE)
 }
+

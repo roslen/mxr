@@ -13,12 +13,16 @@
 #'   SNP. It has three mandatory columns: chr, bp, Ref_allele. Chr column may
 #'   have values like "chr01"..."chr12", bp are just the base pair positions of
 #'   the SNPs, and the Ref_allele column is formatted as "Ref=<nuc>".
+#' @param clumped_snps These are contained in the file outputted by
+#'   \code{mxr_extract_clumped_snps()}. That function needs to be run first
+#'   prior to this.
 #' @param out_prefix Path and prefix of the output files.
 #' @param verbose (Optional) Show verbose output. (DEFAULT=FALSE)
 #' @return TRUE if the PLINK run completed successfully. FALSE, otherwise.
 #'
 #' @export
 mxr_create_region_file <- function(genotype_prefix, reference_alleles = "",
+                                   clumped_snps = "",
                                    out_prefix = "", verbose = FALSE) {
 
    if (!file.exists(paste0(out_prefix,".clumped"))) stop(paste0(out_prefix,
@@ -38,7 +42,8 @@ mxr_create_region_file <- function(genotype_prefix, reference_alleles = "",
 
    # Create the REGION_FILE
    if (verbose) cat("Extracting target SNPs from plink.bim file...")
-   snps <- read.table(paste0(out_prefix,".clumped.snps"),
+   #snps <- read.table(paste0(out_prefix,".clumped.snps"),
+   snps <- read.table(clumped_snps,
                       header = F, stringsAsFactors = F, sep = "\t")
    bim <- data.table::fread(paste(genotype_prefix,"bim",sep="."),
                             data.table = F, stringsAsFactors = F)
