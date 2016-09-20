@@ -22,7 +22,7 @@ mxr_create_haploview_inputs <- function(genotype_prefix, snps_list = "",
                                                                 ".clumped",
                                                                 " does not exist."))
 
-   # OUTPUT_DIRECTORY <- dirname(out_prefix)
+   OUTPUT_DIRECTORY <- dirname(out_prefix)
    # OUTPUT_PREFIX <- basename(out_prefix)
    # SED <- findApplication("sed")
    # TAIL <- findApplication("tail")
