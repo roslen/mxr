@@ -44,7 +44,7 @@ mxr_create_haploview_plot <- function(path_to_haploview="",
                 "-svg",
                 "-png",
                 "-pairwiseTagging",
-                "-maxDistance", max_distance
+                "-maxDistance", max_distance_kb
                 ))
    if (verbose) cat("DONE.\n")
 
