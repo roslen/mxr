@@ -18,12 +18,18 @@
 #' @return TRUE if the PLINK run completed successfully. FALSE, otherwise.
 #'
 #' @export
-mxr_summarise <- function(trait="",
-                          clumped_genes="",
-                          reference_annotation="",
-                          output_prefix="",
+mxr_summarise <- function(trait = "",
+                          clump_file = "",
+                          clumped_genes = "",
+                          reference_annotation = "",
+                          output_prefix ="",
+                          variant_function = "",
+                          exonic_variant_function = "",
                           verbose = FALSE) {
    if (!dir.exists(trait)) stop(paste(trait, "directory does not exist."))
+
+   OUTPUT_DIRECTORY <- dirname(out_prefix)
+   OUTPUT_PREFIX <- basename(out_prefix)
 
    TRAIT <- trait
    PATH <- TRAIT
@@ -45,8 +51,39 @@ mxr_summarise <- function(trait="",
                append=F, quote=F, sep="\t", col.names=T, row.names=F)
    cat("DONE.\n")
 
-   # {ToDo: Continue with the code from consolidate_annotation_files.R.}
-   # 20160920 -- latest update.
+
+
+   cat("Loading functional annotations of significant SNPs...")
+   var <- data.table::fread(variant_function,
+                            data.table = F,
+                            header = F, sep = "\t", stringsAsFactors = F)
+   exn <- tryCatch(data.table::fread(exonic_variant_function,
+                                     data.table = F,
+                                     colClasses = c("character", "character", "character",
+                                                    "character", "numeric", "numeric",
+                                                    "character", "character", "character"),
+                                     header = F, sep = "\t", stringsAsFactors = F),
+                   error=function(e) NULL)
+   cat("DONE.\n")
+
+   if (!is.null(exn)) {
+      cat("Consolidating annotations...")
+      res <- dplyr::left_join(var,
+                              exn,
+                              by = c("V3"="V4", "V4"="V5", "V5"="V6", "V6"="V7", "V7"="V8"))
+      write.table(res, file = paste0(variant_function,".consolidated"),
+                  append = F, quote = F,
+                  sep = "\t", row.names = F, col.names = F)
+      cat("DONE.\n")
+   }
+
+
+
+   ## Portion to create the excel workbook
+   Sys.setenv(R_ZIPCMD="/usr/bin/zip")   # without this openxlsx will cry
+
+
+
 
    return (TRUE)
 }
