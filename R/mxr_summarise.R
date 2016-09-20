@@ -239,7 +239,7 @@ mxr_summarise <- function(trait = "",
    tag_files <- list.files(path = PATH, pattern = "*.TAGS$", include.dirs = T)
    for (i in 1:length(tag_files)) {
       # Get the contents of the entire TAGS file into a vector
-      all_data <- readLines(paste0(path, "/", tag_files[i]))
+      all_data <- readLines(paste0(PATH, "/", tag_files[i]))
 
       # No of alleles is in line 1, second word
       alleles <- as.numeric(strsplit(all_data[1], " ")[[1]][2]) # numbers are hardcoded
