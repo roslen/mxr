@@ -22,18 +22,19 @@ mxr_create_haploview_inputs <- function(genotype_prefix, snps_list = "",
                                                                 ".clumped",
                                                                 " does not exist."))
 
-   OUTPUT_DIRECTORY <- dirname(out_prefix)
-   OUTPUT_PREFIX <- basename(out_prefix)
-   SED <- findApplication("sed")
-   TAIL <- findApplication("tail")
-   AWK <- findApplication("awk")
-   XARGS <- findApplication("xargs")
-   SORT <- findApplication("sort")
-   UNIQ <- findApplication("uniq")
-   TABIX <- findApplication("tabix")
+   # OUTPUT_DIRECTORY <- dirname(out_prefix)
+   # OUTPUT_PREFIX <- basename(out_prefix)
+   # SED <- findApplication("sed")
+   # TAIL <- findApplication("tail")
+   # XARGS <- findApplication("xargs")
+   # UNIQ <- findApplication("uniq")
+   # TABIX <- findApplication("tabix")
+
    PLINK2 <- findApplication("plink2")
    FIND <- findApplication("find")
+   SORT <- findApplication("sort")
    PASTE <- findApplication("paste")
+   AWK <- findApplication("awk")
 
 
    # Create haploview input files in preparation for generating the LD plots.
@@ -41,8 +42,10 @@ mxr_create_haploview_inputs <- function(genotype_prefix, snps_list = "",
    system(paste(PLINK2, "--bfile", genotype_prefix,
                 "--extract", snps_list,
                 "--recode HV",
-                "--out", paste0(out_prefix,".snps_list"),
-                ifelse(!verbose,"> /dev/null 2>&1","")
+                "--out", paste0(out_prefix,".hv"),
+                ifelse(!verbose,
+                       paste("2>",paste0(out_prefix,".hv.errlog"),"1> /dev/null"),
+                       "")
    ))
    if (verbose) cat("DONE.\n")
 
@@ -56,7 +59,7 @@ mxr_create_haploview_inputs <- function(genotype_prefix, snps_list = "",
                 SORT, "|",
                 PASTE, "-s -d ' \\n'", "|",
                 AWK, "'{print $2 \"\\t\" $1;}'",
-                ">", paste0(out_prefix,".snps_list.haploview_batch_input")
+                ">", paste0(out_prefix,".hv.batch")
                 ))
    if (verbose) cat("DONE.\n")
 

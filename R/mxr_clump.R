@@ -85,7 +85,9 @@ mxr_clump <- function(emmax2_results,
                                 "--clump-range-border", clump_range_border_kb),
                           ""),
                    "--out", out_prefix,
-                   ifelse(!verbose,">/dev/null 2>&1","")
+                   ifelse(!verbose,
+                          paste("2>",paste0(out_prefix,".hv.errlog"),"1> /dev/null"),
+                          "")
       ))
    }, warning = function(w) {
       return ("")

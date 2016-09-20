@@ -30,6 +30,7 @@ mxr_create_haploview_plot <- function(path_to_haploview="",
    #                                                              ".clumped",
    #                                                              " does not exist."))
 
+   if (verbose) cat("Generating the haploview LD plot...")
    JAVA <- findApplication("java")
    HAPLOVIEW <- path_to_haploview
    system(paste(JAVA, "-jar",
@@ -45,6 +46,8 @@ mxr_create_haploview_plot <- function(path_to_haploview="",
                 "-pairwiseTagging",
                 "-maxDistance", max_distance
                 ))
+   if (verbose) cat("DONE.\n")
+
 
    # If execution managed to reach this line, then everything went well.
    return (TRUE)
