@@ -19,8 +19,12 @@
 #'
 #' @export
 mxr_summarise <- function(trait = "",
+                          gwas_result = "",
+                          genotype_bim = "",
                           clump_file = "",
+                          clump_ranges_file = "",
                           clumped_genes = "",
+                          clumped_snps = "",
                           reference_annotation = "",
                           output_prefix ="",
                           variant_function = "",
@@ -82,6 +86,169 @@ mxr_summarise <- function(trait = "",
    ## Portion to create the excel workbook
    Sys.setenv(R_ZIPCMD="/usr/bin/zip")   # without this openxlsx will cry
 
+   wb <- openxlsx::createWorkbook()
+   openxlsx::modifyBaseFont(wb, fontSize=10)
+
+
+   ### 2. Create the worksheets under this workbook
+
+   # *.clumped
+   openxlsx::addWorksheet(wb, sheetName="SNPs and linked SNPs")
+
+   # *.ranges
+   openxlsx::addWorksheet(wb, sheetName="SNPs and associated genes")
+
+   # *.variant_function.consolidated
+   # Without header
+   openxlsx::addWorksheet(wb, sheetName="Annotation of SNPs")
+
+   # *.clumped.ranges.genes.annotation
+   openxlsx::addWorksheet(wb, sheetName="annotation of genes")
+   #cat("DONE.\n")
+
+   # create the tag SNPs
+   openxlsx::addWorksheet(wb, sheetName="tag SNPs")
+
+
+   ### 3. Write the data into the worksheets
+   # sheet 1
+   cat("Compiling SNPs and linked SNPs...")
+   data <- read.table(clump_file, header = T, stringsAsFactors = F)
+   openxlsx::writeData(wb = wb,
+                       sheet = "SNPs and linked SNPs",
+                       x = data,
+                       colNames = TRUE,
+                       rowNames = FALSE)
+   setColWidths(wb, sheet="SNPs and linked SNPs", cols=1:(dim(data)[2]), widths="auto")
+   cat("DONE.\n")
+
+   # sheet 2
+   cat("Compiling SNPs and associated genes...")
+   data <- read.table(clump_ranges_file, header = T, stringsAsFactors = F)
+   openxlsx::writeData(wb = wb,
+                       sheet = "SNPs and associated genes",
+                       x = data,
+                       colNames = TRUE,
+                       rowNames = FALSE)
+   setColWidths(wb, sheet="SNPs and associated genes", cols=1:(dim(data)[2]), widths="auto")
+   cat("DONE.\n")
+
+
+   # sheet 3
+   cat("Reading SNP annotation files...")
+   data <- tryCatch(read.table(paste0(variant_function,".consolidated"),
+                               header = F, sep = "\t", stringsAsFactors = F),
+                    error=function(e) NULL)
+   if (!is.null(data)) {
+      data <- data[, -c(12)] # remove the duplicate "Notes" field
+      colnames(data) <- c("snp_location", "locus_id", "chrom", "start", "end",
+                          "ref", "alt", "notes", "line_no", "type_of_aa_change",
+                          "transcript_and_aa_change")
+   } else {
+      # Read only the variant function since there were no exonic SNPs that were found.
+      data <- tryCatch(read.table(variant_function,
+                                  header = F, sep = "\t", stringsAsFactors = F),
+                       error = function(e) NULL)
+      colnames(data) <- c("snp_location", "locus_id",
+                          "chrom", "start", "end", "ref", "alt", "notes")
+   }
+   cat("DONE.\n")
+
+
+   cat("Converting chromosome codes to GWAS compatible format...")
+   data$chrom <- gsub("Chr","", data$chrom)
+   cat("DONE.\n")
+
+   cat("Creating region file for SNP extraction...")
+   write.table(data[, c("chrom", "start")],
+               file = paste0(clumped_snps, ".region"),
+               quote = F, sep = "\t", append = F, row.names = F, col.names = F)
+   cat("DONE.\n")
+
+
+   ####>>>>>STOPPED HERE!!!<<<<<<####
+
+   cat("Putting bim details in to the gwas results...")
+   system(paste0(
+      "tail -n+2 ", gwas_result,
+      " | paste - ", genotype_bim,
+      " > ", gwas_result, ".bim"
+   ))
+   cat("DONE.\n")
+
+
+   cat("Indexing the detailed GWAS results...")
+   # system(paste0("tail -n+2 ",path,"/",trait,"_emmax.ps.qqman",
+   #               " | ",
+   #               "bgzip -c > ",path,"/",trait,"_emmax.ps.qqman.gz && ",
+   #               "tabix -s2 -b3 -e3 ", path,"/",trait,"_emmax.ps.qqman.gz"))
+   system(paste0("bgzip -c ", gwas_result, ".bim > ",
+                 gwas_result, ".bim.gz && ",
+                 "tabix -s5 -b8 -e8 ", gwas_result, ".bim.gz"))
+   cat("DONE.\n")
+
+
+   # Extract the GWAS results that are in the clumped snps file
+   cat("Extracting details of clumped SNPs...")
+   system(paste0("tabix -s5 -b8 -e8 ", gwas_result, ".bim.gz -R ",
+                 clumped_snps, ".region > ",
+                 clumped_snps,".details"))
+   # snp_details <- read.table(paste0(clumped_snps, ".details"),
+   #                           sep = "\t", stringsAsFactors = F,
+   #                           colClasses = c("character", "character", "numeric", "numeric",
+   #                                          "numeric"),
+   #                           col.names=c("snp_id", "chrom", "pos", "allele_effect", "pval"))
+   # cat("DONE.\n")
+   #
+   # # Add the snp details to the annotation data
+   # data <- dplyr::inner_join(data, snp_details[,c(2,3,1,4,5)], by=c("chrom"="chrom","start"="pos"))
+   # # TODO: create friendly names for data
+   #
+   # # Writing the aggregated data to disk
+   # writeData(wb=wb, sheet="Annotation of SNPs", x=data, colNames=TRUE, rowNames=FALSE)
+   # setColWidths(wb, sheet="Annotation of SNPs", cols=1:(dim(data)[2]), widths="auto")
+   #
+   #
+   #
+   # # sheet 4
+   # # NOTE: Putting 'quote=""' ensures that any quotation marks ", or ' in any field is ignored.
+   # cat("Compiling gene annotations...")
+   # data <- read.table(paste0(path,"/",trait,"_emmax.ps.qqman.emmax_200kb.clumped.ranges.genes.annotation"), header=T, sep="\t", stringsAsFactors=F, quote="")
+   # writeData(wb=wb, sheet="annotation of genes", x=data, colNames=TRUE, rowNames=FALSE)
+   # setColWidths(wb, sheet="annotation of genes", cols=1:(dim(data)[2]), widths="auto")
+   # cat("DONE.\n")
+   #
+   #
+   # # sheet 5
+   # # save the TAG SNPs here
+   # cat("Compiling tag SNPs...")
+   # tag_snps <- data.frame(tag_snp=character(0), captured_alleles=character(0))
+   # tag_files <- list.files(path=path, pattern="*.TAGS$", include.dirs=T)
+   # for (i in 1:length(tag_files)) {
+   #    # Get the contents of the entire TAGS file into a vector
+   #    all_data <- readLines(paste0(path,"/",tag_files[i]))
+   #
+   #    # No of alleles is in line 1, second word
+   #    alleles <- as.numeric(strsplit(all_data[1]," ")[[1]][2]) # numbers are hardcoded
+   #    snps <- as.numeric(strsplit(all_data[3]," ")[[1]][2]) # numbers are also hardcoded
+   #    for (j in 1:snps) {
+   #       #cat(paste0(all_data[alleles+7],"\n"))
+   #       res <- strsplit(all_data[alleles+7+(j-1)], split="\t")
+   #       tag_snps <- rbind(tag_snps,
+   #                         data.frame(tag_snp=res[[1]][1], captured_alleles=res[[1]][2],
+   #                                    stringsAsFactors=F))
+   #    }
+   # }
+   # writeData(wb=wb, sheet="tag SNPs", x=tag_snps, colNames=TRUE, rowNames=FALSE)
+   # setColWidths(wb, sheet="tag SNPs", cols=1:(dim(tag_snps)[2]), widths="auto")
+   # cat("DONE.\n")
+   #
+   #
+   # Save the workbook
+   cat("Saving the summary...")
+   saveWorkbook(wb, paste0(output_prefix, ".summary.xlsx"), overwrite = TRUE)
+   cat("DONE.\n")
+   #
 
 
 
