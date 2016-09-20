@@ -119,7 +119,9 @@ mxr_summarise <- function(trait = "",
                        x = data,
                        colNames = TRUE,
                        rowNames = FALSE)
-   setColWidths(wb, sheet="SNPs and linked SNPs", cols=1:(dim(data)[2]), widths="auto")
+   openxlsx::setColWidths(wb,
+                          sheet="SNPs and linked SNPs",
+                          cols=1:(dim(data)[2]), widths="auto")
    cat("DONE.\n")
 
    # sheet 2
@@ -130,7 +132,9 @@ mxr_summarise <- function(trait = "",
                        x = data,
                        colNames = TRUE,
                        rowNames = FALSE)
-   setColWidths(wb, sheet="SNPs and associated genes", cols=1:(dim(data)[2]), widths="auto")
+   openxlsx::setColWidths(wb,
+                          sheet="SNPs and associated genes",
+                          cols=1:(dim(data)[2]), widths="auto")
    cat("DONE.\n")
 
 
@@ -205,8 +209,8 @@ mxr_summarise <- function(trait = "",
    # # TODO: create friendly names for data
    #
    # # Writing the aggregated data to disk
-   # writeData(wb=wb, sheet="Annotation of SNPs", x=data, colNames=TRUE, rowNames=FALSE)
-   # setColWidths(wb, sheet="Annotation of SNPs", cols=1:(dim(data)[2]), widths="auto")
+   # openxlsx::writeData(wb=wb, sheet="Annotation of SNPs", x=data, colNames=TRUE, rowNames=FALSE)
+   # openxlsx::setColWidths(wb, sheet="Annotation of SNPs", cols=1:(dim(data)[2]), widths="auto")
    #
    #
    #
@@ -214,8 +218,8 @@ mxr_summarise <- function(trait = "",
    # # NOTE: Putting 'quote=""' ensures that any quotation marks ", or ' in any field is ignored.
    # cat("Compiling gene annotations...")
    # data <- read.table(paste0(path,"/",trait,"_emmax.ps.qqman.emmax_200kb.clumped.ranges.genes.annotation"), header=T, sep="\t", stringsAsFactors=F, quote="")
-   # writeData(wb=wb, sheet="annotation of genes", x=data, colNames=TRUE, rowNames=FALSE)
-   # setColWidths(wb, sheet="annotation of genes", cols=1:(dim(data)[2]), widths="auto")
+   # openxlsx::writeData(wb=wb, sheet="annotation of genes", x=data, colNames=TRUE, rowNames=FALSE)
+   # openxlsx::setColWidths(wb, sheet="annotation of genes", cols=1:(dim(data)[2]), widths="auto")
    # cat("DONE.\n")
    #
    #
@@ -239,8 +243,8 @@ mxr_summarise <- function(trait = "",
    #                                    stringsAsFactors=F))
    #    }
    # }
-   # writeData(wb=wb, sheet="tag SNPs", x=tag_snps, colNames=TRUE, rowNames=FALSE)
-   # setColWidths(wb, sheet="tag SNPs", cols=1:(dim(tag_snps)[2]), widths="auto")
+   # openxlsx::writeData(wb=wb, sheet="tag SNPs", x=tag_snps, colNames=TRUE, rowNames=FALSE)
+   # openxlsx::setColWidths(wb, sheet="tag SNPs", cols=1:(dim(tag_snps)[2]), widths="auto")
    # cat("DONE.\n")
    #
    #
