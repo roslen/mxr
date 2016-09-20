@@ -170,7 +170,6 @@ mxr_summarise <- function(trait = "",
    cat("DONE.\n")
 
 
-   ####>>>>>STOPPED HERE!!!<<<<<<####
 
    cat("Putting bim details in to the gwas results...")
    system(paste0(
@@ -182,10 +181,6 @@ mxr_summarise <- function(trait = "",
 
 
    cat("Indexing the detailed GWAS results...")
-   # system(paste0("tail -n+2 ",path,"/",trait,"_emmax.ps.qqman",
-   #               " | ",
-   #               "bgzip -c > ",path,"/",trait,"_emmax.ps.qqman.gz && ",
-   #               "tabix -s2 -b3 -e3 ", path,"/",trait,"_emmax.ps.qqman.gz"))
    system(paste0("bgzip -c ", gwas_result, ".bim > ",
                  gwas_result, ".bim.gz && ",
                  "tabix -s5 -b8 -e8 ", gwas_result, ".bim.gz"))
@@ -197,22 +192,33 @@ mxr_summarise <- function(trait = "",
    system(paste0("tabix -s5 -b8 -e8 ", gwas_result, ".bim.gz -R ",
                  clumped_snps, ".region > ",
                  clumped_snps,".details"))
-   # snp_details <- read.table(paste0(clumped_snps, ".details"),
-   #                           sep = "\t", stringsAsFactors = F,
-   #                           colClasses = c("character", "character", "numeric", "numeric",
-   #                                          "numeric"),
-   #                           col.names=c("snp_id", "chrom", "pos", "allele_effect", "pval"))
-   # cat("DONE.\n")
-   #
-   # # Add the snp details to the annotation data
-   # data <- dplyr::inner_join(data, snp_details[,c(2,3,1,4,5)], by=c("chrom"="chrom","start"="pos"))
-   # # TODO: create friendly names for data
-   #
-   # # Writing the aggregated data to disk
-   # openxlsx::writeData(wb=wb, sheet="Annotation of SNPs", x=data, colNames=TRUE, rowNames=FALSE)
-   # openxlsx::setColWidths(wb, sheet="Annotation of SNPs", cols=1:(dim(data)[2]), widths="auto")
-   #
-   #
+
+
+   ####>>>>>STOPPED HERE!!!<<<<<<####
+
+   snp_details <- read.table(paste0(clumped_snps, ".details"),
+                             sep = "\t", stringsAsFactors = F,
+                             colClasses = c("character", "numeric", "numeric", "numeric",
+                                            "numeric", "character", "numeric", "numeric",
+                                            "character", "character"),
+                             col.names=c("snp_id", "allele_effect", "std_error", "pval",
+                                         "chrom", "snp_id", "cm", "bp", "a1", "a2"))
+   cat("DONE.\n")
+
+   # Add the snp details to the annotation data
+   data <- dplyr::inner_join(data, snp_details[,c("snp_id",
+                                                  "chrom",
+                                                  "bp",
+                                                  "allele_effect",
+                                                  "pval")],
+                             by=c("chrom"="chrom", "start"="bp"))
+   # TODO: create friendly names for data
+
+   # Writing the aggregated data to disk
+   openxlsx::writeData(wb=wb, sheet="Annotation of SNPs", x=data, colNames=TRUE, rowNames=FALSE)
+   openxlsx::setColWidths(wb, sheet="Annotation of SNPs", cols=1:(dim(data)[2]), widths="auto")
+
+
    #
    # # sheet 4
    # # NOTE: Putting 'quote=""' ensures that any quotation marks ", or ' in any field is ignored.
