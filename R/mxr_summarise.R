@@ -219,16 +219,19 @@ mxr_summarise <- function(trait = "",
    openxlsx::setColWidths(wb, sheet="Annotation of SNPs", cols=1:(dim(data)[2]), widths="auto")
 
 
-   #
-   # # sheet 4
-   # # NOTE: Putting 'quote=""' ensures that any quotation marks ", or ' in any field is ignored.
-   # cat("Compiling gene annotations...")
-   # data <- read.table(paste0(path,"/",trait,"_emmax.ps.qqman.emmax_200kb.clumped.ranges.genes.annotation"), header=T, sep="\t", stringsAsFactors=F, quote="")
-   # openxlsx::writeData(wb=wb, sheet="annotation of genes", x=data, colNames=TRUE, rowNames=FALSE)
-   # openxlsx::setColWidths(wb, sheet="annotation of genes", cols=1:(dim(data)[2]), widths="auto")
-   # cat("DONE.\n")
-   #
-   #
+   # sheet 4
+   # NOTE: Putting 'quote=""' ensures that any quotation marks ", or ' in any field is ignored.
+   cat("Compiling gene annotations...")
+   data <- read.table(paste0(clumped_genes, ".annotation"),
+                      header = T, sep = "\t", stringsAsFactors = F, quote = "")
+   openxlsx::writeData(wb = wb,
+                       sheet = "annotation of genes",
+                       x=data,
+                       colNames=TRUE, rowNames=FALSE)
+   openxlsx::setColWidths(wb, sheet="annotation of genes", cols=1:(dim(data)[2]), widths="auto")
+   cat("DONE.\n")
+
+
    # # sheet 5
    # # save the TAG SNPs here
    # cat("Compiling tag SNPs...")
