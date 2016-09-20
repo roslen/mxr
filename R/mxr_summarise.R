@@ -199,7 +199,7 @@ mxr_summarise <- function(trait = "",
    snp_details <- read.table(paste0(clumped_snps, ".details"),
                              sep = "\t", stringsAsFactors = F,
                              colClasses = c("character", "numeric", "numeric", "numeric",
-                                            "numeric", "character", "numeric", "numeric",
+                                            "character", "character", "numeric", "numeric",
                                             "character", "character"),
                              col.names=c("snp_id", "allele_effect", "std_error", "pval",
                                          "chrom", "snp_id", "cm", "bp", "a1", "a2"))
