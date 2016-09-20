@@ -10,6 +10,11 @@
 #' @param trait The directory containing the trait phenotype. All GWAS results
 #'   are also stored into this directory that includes the outputs of this
 #'   function.
+#' @param clumped_genes The clumped.genes file outputted by the plink file.
+#' @param reference_annotation The excel file containing the annotation file
+#'   that will be used to annotate the genes.
+#' @param out_prefix Path and prefix of the output files.
+#' @param verbose (Optional) Show verbose output. (DEFAULT=FALSE)
 #' @return TRUE if the PLINK run completed successfully. FALSE, otherwise.
 #'
 #' @export
