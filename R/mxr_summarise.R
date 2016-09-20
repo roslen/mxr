@@ -250,7 +250,7 @@ mxr_summarise <- function(trait = "",
    #
    # Save the workbook
    cat("Saving the summary...")
-   saveWorkbook(wb, paste0(output_prefix, ".summary.xlsx"), overwrite = TRUE)
+   openxlsx::saveWorkbook(wb, paste0(output_prefix, ".summary.xlsx"), overwrite = TRUE)
    cat("DONE.\n")
    #
 
