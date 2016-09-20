@@ -28,8 +28,8 @@ mxr_summarise <- function(trait = "",
                           verbose = FALSE) {
    if (!dir.exists(trait)) stop(paste(trait, "directory does not exist."))
 
-   OUTPUT_DIRECTORY <- dirname(out_prefix)
-   OUTPUT_PREFIX <- basename(out_prefix)
+   OUTPUT_DIRECTORY <- dirname(output_prefix)
+   OUTPUT_PREFIX <- basename(output_prefix)
 
    TRAIT <- trait
    PATH <- TRAIT
