@@ -73,7 +73,7 @@ mxr_manhattan <- function(gwas_results = "",
    if (manhattan) {
       cat("Generating manhattan plot...")
       png(filename = paste0(file_prefix,".manhattan.png"),
-                            width = width, height = height, units = unit, res=res)
+          width = width, height = height, units = unit, res=res)
       par(mar = mar, mgp = mgp)
       qqman::manhattan(data,
                        chr = chr,
@@ -109,7 +109,7 @@ mxr_manhattan <- function(gwas_results = "",
           width = width, height = height, units = unit, res = res)
       par(mar = mar, mgp = mgp)
       qqman::qq(data[, c(p)],
-         xlim = c(0, xlim), ylim=c(0, ylim), las=1, bty="l", cex.axis = cex.axis, yaxt="n",
+         xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l", cex.axis = cex.axis, yaxt="n",
          main = main, xlab = "", ylab = "")
       abline(0,1)
       #abline(-log10(0.05/snps),0, col="red", lty="dashed")
