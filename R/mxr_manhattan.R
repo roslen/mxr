@@ -101,15 +101,14 @@ mxr_manhattan <- function(gwas_results = "",
       # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
       chisq <- qchisq(1-data[,c(p)], 1)
       inflation_factor <- median(chisq)/qchisq(0.5,1)
-      cat(inflation_factor)
 
       cat(paste0("Generating qq plot..."))
-      #svglite(file="am1_emmax_qq.svg", width=5, height=5)
       png(filename = paste0(file_prefix,".qq.png"),
           width = width, height = height, units = unit, res = res)
       par(mar = mar, mgp = mgp)
       qqman::qq(data[, c(p)],
-         xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l", cex.axis = cex.axis, yaxt="n",
+         xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
+         cex.axis = cex.axis, yaxt="n",
          main = main, xlab = "", ylab = "")
       abline(0,1)
       #abline(-log10(0.05/snps),0, col="red", lty="dashed")
