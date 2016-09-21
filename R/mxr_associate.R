@@ -90,6 +90,15 @@ mxr_associate <- function(tped_prefix, pheno_file, kin_file,
    ))
    if (verbose) cat("DONE.\n")
 
+   cat("Putting bim details in to the gwas results...")
+   system(paste0(
+      "tail -n+2 ", out_prefix, ".ps",
+      " | paste - ", tped_prefix, ".bim",
+      " > ", out_prefix, ".ps.bim"
+   ))
+   cat("DONE.\n")
+
+
    # If execution managed to reach this line, then everything went well.
    return (TRUE)
 }

@@ -178,13 +178,13 @@ mxr_summarise <- function(trait = "",
 
 
 
-   cat("Putting bim details in to the gwas results...")
-   system(paste0(
-      "tail -n+2 ", gwas_result,
-      " | paste - ", genotype_bim,
-      " > ", gwas_result, ".bim"
-   ))
-   cat("DONE.\n")
+   # cat("Putting bim details in to the gwas results...")
+   # system(paste0(
+   #    "tail -n+2 ", gwas_result,
+   #    " | paste - ", genotype_bim,
+   #    " > ", gwas_result, ".bim"
+   # ))
+   # cat("DONE.\n")
 
 
    cat("Indexing the detailed GWAS results...")
