@@ -110,7 +110,7 @@ mxr_manhattan <- function(gwas_results = "",
       #    xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
       #    cex.axis = cex.axis, yaxt="n",
       #    main = main, xlab = "", ylab = "")
-      qqman::qq(data[,c(p)])
+      qqman::qq(data$p)
       # abline(0,1)
       # axis(side=2, at = y_tickmarks, labels = y_tickmark_labels,
       #      las=1, mgp = mgp, cex.axis = cex.axis)
