@@ -14,14 +14,17 @@
 #' @param suggestive_line Default -log10(1e-5). Set to FALSE to disable.
 #' @param genomewideline Default -log10(1e-7). Set to FALSE to disable.
 #' @param highlight Character vector of SNPs to highlight in the manhattan plot.
+#' @param xlim Maximum x-axis value (for the qq plot).
 #' @param ylim Maximum y-axis value.
-#' @param file Fullpath to the where to store the filename.
+#' @param file_prefix Fullpath and prefix for manhattan and qq plot file names.
 #' @param width Width (in inches) of the figure.
 #' @param height Height (in inches) of the figure.
 #' @param unit Default: "in" (inches).
 #' @param res Resolution of the image.
 #' @param mar Vector of margins.
 #' @param mgp The mgp vector in plot.
+#' @param manhattan Set to TRUE to generate Manhattan plot.
+#' @param qq Set to TRUE to generate QQ plot.
 #'
 #' @export
 mxr_manhattan <- function(gwas_results = "",
@@ -32,8 +35,9 @@ mxr_manhattan <- function(gwas_results = "",
                       suggestive_line = -log10(1e-5),
                       genomewide_line = -log10(1e-7),
                       highlight = NULL,
+                      xlim = 10,
                       ylim = 20,
-                      file = "",
+                      file_prefix = "",
                       width = 5,
                       height = 5,
                       unit = "in",
@@ -43,7 +47,9 @@ mxr_manhattan <- function(gwas_results = "",
                       cex.axis = 0.8,
                       main = "",
                       y_tickmarks = "",
-                      y_tickmark_labels = "") {
+                      y_tickmark_labels = "",
+                      manhattan = T,
+                      qq = T) {
 
 
    if (!file.exists(gwas_results)) stop(paste(gwas_results, "does not exist."))
@@ -63,23 +69,55 @@ mxr_manhattan <- function(gwas_results = "",
 
    highlight <- highlight
 
-   cat("Generating manhattan plot...")
-   png(filename = file, width = width, height = height, units = unit, res=res)
-   par(mar = mar, mgp = mgp)
-   manhattan(data,
-             highlight=highlight,
-             ylim=c(0,ylim), las=1, bty="l", cex.axis = cex.axis,
-             yaxt = "n", xlab = "", ylab = "",
-             main = main,
-             suggestiveline = suggestiveline, genomewideline = genomewideline)
 
-   axis(side=2, at = y_tickmarks, labels = y_tickmark_labels, las=1,
-        mgp = mgp, cex.axis = cex.axis)
+   if (manhattan) {
+      cat("Generating manhattan plot...")
+      png(filename = paste0(file_prefix,".manhattan.png"),
+                            width = width, height = height, units = unit, res=res)
+      par(mar = mar, mgp = mgp)
+      qqman::manhattan(data,
+                       highlight=highlight,
+                       ylim=c(0,ylim), las=1, bty="l", cex.axis = cex.axis,
+                       yaxt = "n", xlab = "", ylab = "",
+                       main = main,
+                       suggestiveline = suggestiveline, genomewideline = genomewideline)
 
-   mtext("Chromosome", side=1, line=2.5)
-   mtext(expression(-log[10](italic(p))), side=2, line=2.5)
+      axis(side=2, at = y_tickmarks, labels = y_tickmark_labels, las=1,
+           mgp = mgp, cex.axis = cex.axis)
 
-   res <- dev.off()
-   cat("DONE.\n")
+      mtext("Chromosome", side=1, line=2.5)
+      mtext(expression(-log[10](italic(p))), side=2, line=2.5)
+
+      res <- dev.off()
+      cat("DONE.\n")
+   }
+
+   if (qq) {
+      # Calculate inflation factor
+      # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
+      chisq <- qchisq(1-data[,c(p)], 1)
+      inflation_factor <- median(chisq)/qchisq(0.5,1)
+      cat(inflation_factor)
+
+      cat(paste0("Generating qq plot..."))
+      #svglite(file="am1_emmax_qq.svg", width=5, height=5)
+      png(filename = paste0(file_prefix,".qq.png"),
+          width = width, height = height, units = unit, res = res)
+      par(mar = mar, mgp = mgp)
+      qq(data[, c(p)],
+         xlim = c(0, xlim), ylim=c(0, ylim), las=1, bty="l", cex.axis = cex.axis, yaxt="n",
+         main = main, xlab = "", ylab = "")
+      abline(0,1)
+      #abline(-log10(0.05/snps),0, col="red", lty="dashed")
+      axis(side=2, at = y_tickmarks, labels = y_tickmark_labels,
+           las=1, mgp = mgp, cex.axis = cex.axis)
+      mtext(expression(Expected ~ ~-log[10](italic(p))), side=1, line=2.5)
+      mtext(expression(Observed ~ ~-log[10](italic(p))), side=2, line=2.5)
+      mtext(paste0("Inflation factor: ", sprintf("%1.2f",inflation_factor)), side=1, line=3.5)
+      res <- dev.off()
+      cat("DONE.\n")
+   }
+
+
 
 }
