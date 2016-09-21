@@ -4,22 +4,38 @@
 \alias{mxr_summarise}
 \title{Summarize the GWAS results into an Excel file.}
 \usage{
-mxr_summarise(trait = "", clumped_genes = "", reference_annotation = "",
-  output_prefix = "", verbose = FALSE)
+mxr_summarise(trait = "", gwas_result = "", genotype_bim = "",
+  clump_file = "", clump_ranges_file = "", clumped_genes = "",
+  clumped_snps = "", reference_annotation = "", output_prefix = "",
+  variant_function = "", exonic_variant_function = "", verbose = FALSE)
 }
 \arguments{
 \item{trait}{The directory containing the trait phenotype. All GWAS results
 are also stored into this directory that includes the outputs of this
 function.}
 
-\item{clumped_genes}{The clumped.genes file outputted by the plink file.}
+\item{gwas_result}{The output of emmax2. (*.ps)}
+
+\item{genotype_bim}{The .bim file of the genotype data.}
+
+\item{clump_file}{The .clumped file.}
+
+\item{clump_ranges_file}{The .clumped.ranges file.}
+
+\item{clumped_genes}{The .clumped.genes file outputted by the plink file.}
+
+\item{clumped_snps}{The .clumped.snps file.}
 
 \item{reference_annotation}{The excel file containing the annotation file
 that will be used to annotate the genes.}
 
-\item{verbose}{(Optional) Show verbose output. (DEFAULT=FALSE)}
+\item{output_prefix}{Path and prefix of the output files.}
 
-\item{out_prefix}{Path and prefix of the output files.}
+\item{variant_function}{Output of annovar.}
+
+\item{exonic_variant_function}{Output of annovar.}
+
+\item{verbose}{(Optional) Show verbose output. (DEFAULT=FALSE)}
 }
 \value{
 TRUE if the PLINK run completed successfully. FALSE, otherwise.
