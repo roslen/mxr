@@ -76,6 +76,10 @@ mxr_manhattan <- function(gwas_results = "",
                             width = width, height = height, units = unit, res=res)
       par(mar = mar, mgp = mgp)
       qqman::manhattan(data,
+                       chr = chr,
+                       bp = bp,
+                       p = p,
+                       snp = snp,
                        highlight=highlight,
                        ylim=c(0,ylim), las=1, bty="l", cex.axis = cex.axis,
                        yaxt = "n", xlab = "", ylab = "",
