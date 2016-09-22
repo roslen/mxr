@@ -67,32 +67,6 @@ mxr_manhattan <- function(gwas_results = "",
    highlight <- highlight
 
 
-   if (manhattan) {
-      cat("Generating manhattan plot...")
-      png(filename = paste0(file_prefix,".manhattan.png"),
-          width = width, height = height, units = unit, res=res)
-      par(mar = mar, mgp = mgp)
-      qqman::manhattan(data,
-                       chr = chr,
-                       bp = bp,
-                       p = p,
-                       snp = snp,
-                       highlight=highlight,
-                       ylim=c(0,ylim), las=1, bty="l", cex.axis = cex.axis,
-                       yaxt = "n", xlab = "", ylab = "",
-                       main = main,
-                       suggestiveline = suggestiveline, genomewideline = genomewideline)
-
-      axis(side=2, at = y_tickmarks, labels = y_tickmark_labels, las=1,
-           mgp = mgp, cex.axis = cex.axis)
-
-      mtext("Chromosome", side=1, line=2.5)
-      mtext(expression(-log[10](italic(p))), side=2, line=2.5)
-
-      res <- dev.off()
-      cat("DONE.\n")
-   }
-
    if (qq) {
       # Calculate inflation factor
       # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
@@ -114,6 +88,32 @@ mxr_manhattan <- function(gwas_results = "",
       mtext(expression(Expected ~ ~-log[10](italic(p))), side=1, line=2.5)
       mtext(expression(Observed ~ ~-log[10](italic(p))), side=2, line=2.5)
       mtext(paste0("Inflation factor: ", sprintf("%1.2f",inflation_factor)), side=1, line=3.5)
+
+      res <- dev.off()
+      cat("DONE.\n")
+   }
+
+   if (manhattan) {
+      cat("Generating manhattan plot...")
+      png(filename = paste0(file_prefix,".manhattan.png"),
+          width = width, height = height, units = unit, res=res)
+      par(mar = mar, mgp = mgp)
+      qqman::manhattan(data,
+                       chr = chr,
+                       bp = bp,
+                       p = p,
+                       snp = snp,
+                       highlight=highlight,
+                       ylim=c(0,ylim), las=1, bty="l", cex.axis = cex.axis,
+                       yaxt = "n", xlab = "", ylab = "",
+                       main = main,
+                       suggestiveline = suggestiveline, genomewideline = genomewideline)
+
+      axis(side=2, at = y_tickmarks, labels = y_tickmark_labels, las=1,
+           mgp = mgp, cex.axis = cex.axis)
+
+      mtext("Chromosome", side=1, line=2.5)
+      mtext(expression(-log[10](italic(p))), side=2, line=2.5)
 
       res <- dev.off()
       cat("DONE.\n")
