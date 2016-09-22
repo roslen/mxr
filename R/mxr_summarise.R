@@ -85,17 +85,18 @@ mxr_summarise <- function(trait = "",
       write.table(res, file = paste0(variant_function,".consolidated"),
                   append = F, quote = F,
                   sep = "\t", row.names = F, col.names = F)
-   } else {
-      # Add 5 NA columns
-      var$V8 <- NA
-      var$V9 <- NA
-      var$V10 <- NA
-      var$V11 <- NA
-      var$V12 <- NA
-      write.table(var, file = paste0(variant_function,".consolidated"),
-                  append = F, quote = F,
-                  sep = "\t", row.names = F, col.names = F)
    }
+   # else {
+   #    # Add 5 NA columns
+   #    var$V8 <- ""
+   #    var$V9 <- NA
+   #    var$V10 <- NA
+   #    var$V11 <- NA
+   #    var$V12 <- NA
+   #    write.table(var, file = paste0(variant_function,".consolidated"),
+   #                append = F, quote = F,
+   #                sep = "\t", row.names = F, col.names = F)
+   # }
    cat("DONE.\n")
 
 
