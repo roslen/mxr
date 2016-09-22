@@ -6,10 +6,11 @@
 \usage{
 mxr_manhattan(gwas_results = "", chr = "CHR", bp = "BP", p = "P",
   snp = "SNP", suggestive_line = -log10(1e-05),
-  genomewide_line = -log10(1e-07), highlight = NULL, ylim = 20,
-  file = "", width = 5, height = 5, unit = "in", res = 300,
-  mar = c(5, 4, 4, 0) + 0.1, mgp = c(3, 0.8, 0), cex.axis = 0.8,
-  main = "", y_tickmarks = "", y_tickmark_labels = "")
+  genomewide_line = -log10(1e-07), highlight = NULL, xlim = 10,
+  ylim = 20, file_prefix = "", width = 5, height = 5, unit = "in",
+  res = 300, mar = c(5, 4, 4, 0) + 0.1, mgp = c(3, 0.8, 0),
+  cex.axis = 0.8, main = "", y_tickmarks = "", y_tickmark_labels = "",
+  manhattan = T, qq = T)
 }
 \arguments{
 \item{gwas_results}{The fullpath to the GWAS results. The file must have a
@@ -28,9 +29,11 @@ position.}
 
 \item{highlight}{Character vector of SNPs to highlight in the manhattan plot.}
 
+\item{xlim}{Maximum x-axis value (for the qq plot).}
+
 \item{ylim}{Maximum y-axis value.}
 
-\item{file}{Fullpath to the where to store the filename.}
+\item{file_prefix}{Fullpath and prefix for manhattan and qq plot file names.}
 
 \item{width}{Width (in inches) of the figure.}
 
@@ -43,6 +46,10 @@ position.}
 \item{mar}{Vector of margins.}
 
 \item{mgp}{The mgp vector in plot.}
+
+\item{manhattan}{Set to TRUE to generate Manhattan plot.}
+
+\item{qq}{Set to TRUE to generate QQ plot.}
 
 \item{genomewideline}{Default -log10(1e-7). Set to FALSE to disable.}
 }
