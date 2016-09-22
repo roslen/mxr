@@ -106,7 +106,8 @@ mxr_manhattan <- function(gwas_results = "",
       png(filename = paste0(file_prefix,".qq.png"),
          width = width, height = height, units = unit, res=res)
       par(mar = mar, mgp = mgp)
-      qqman::qq(data[, c(p)],
+      #qqman::qq(data[, c(p)],
+      qqman::qq(data$p,
                 xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
                 cex.axis = cex.axis, yaxt="n",
                 main = main, xlab = "", ylab = "")
