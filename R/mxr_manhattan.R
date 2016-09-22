@@ -103,9 +103,9 @@ mxr_manhattan <- function(gwas_results = "",
       inflation_factor <- median(chisq)/qchisq(0.5,1)
 
       cat(paste0("Generating qq plot..."))
-      png(filename = paste0(file_prefix,".qq.png"),
-          width = width, height = height, units = unit, res=res)
-      par(mar = mar, mgp = mgp)
+      #png(filename = paste0(file_prefix,".qq.png"),
+      #    width = width, height = height, units = unit, res=res)
+      #par(mar = mar, mgp = mgp)
       # qqman::qq(data[, c(p)],
       #    xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
       #    cex.axis = cex.axis, yaxt="n",
@@ -119,7 +119,7 @@ mxr_manhattan <- function(gwas_results = "",
       # mtext(expression(Expected ~ ~-log[10](italic(p))), side=1, line=2.5)
       # mtext(expression(Observed ~ ~-log[10](italic(p))), side=2, line=2.5)
       # mtext(paste0("Inflation factor: ", sprintf("%1.2f",inflation_factor)), side=1, line=3.5)
-      res <- dev.off()
+      #res <- dev.off()
       cat("DONE.\n")
    }
 
