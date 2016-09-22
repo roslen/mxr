@@ -1,3 +1,27 @@
+# This is a utility function
+qq <- function (pvector, ...)
+{
+   if (!is.numeric(pvector)) stop("Input must be numeric.")
+   #pvector <- pvector[!is.na(pvector) & !is.nan(pvector) & !is.null(pvector) &
+   #                      is.finite(pvector) & pvector < 1 & pvector > 0]
+   o = -log10(sort(pvector, decreasing = FALSE))
+   e = -log10(ppoints(length(pvector)))
+   def_args <- list(pch = 20,
+                    xlim = c(0, max(e)),
+                    ylim = c(0, max(o)),
+                    xlab = expression(Expected ~ ~-log[10](italic(p))),
+                    ylab = expression(Observed ~ ~-log[10](italic(p))))
+   dotargs <- list(...)
+   tryCatch(
+      do.call("plot",
+              c(list(x = e, y = o),
+                def_args[!names(def_args) %in% names(dotargs)],
+                dotargs)),
+      warn = stop)
+   abline(0, 1, col = "red")
+} # qq
+
+
 #' Generate the manhattan plot.
 #'
 #' \code{mxr_manhattan} generates the manhattan plot of the GWAS results.
@@ -66,33 +90,6 @@ mxr_manhattan <- function(gwas_results = "",
    suggestiveline <- suggestive_line
    highlight <- highlight
 
-
-   #par(mar = mar, mgp = mgp)
-   if (qq) {
-      # Calculate inflation factor
-      # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
-      chisq <- qchisq(1 - data[, c(p)], 1)
-      inflation_factor <- median(chisq)/qchisq(0.5,1)
-
-      cat(paste0("Generating qq plot..."))
-      png(filename = paste0(file_prefix,".qq.png"),
-         width = width, height = height, units = unit, res=res)
-      par(mar=c(5,4,4,0)+.1, mgp=c(3,.8,0))
-      qqman::qq(data[, c(p)],
-                xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
-                cex.axis = cex.axis, yaxt="n",
-                main = main, xlab = "", ylab = "")
-      # abline(0,1)
-      axis(side=2, at = y_tickmarks, labels = y_tickmark_labels,
-           las=1, mgp = mgp, cex.axis = cex.axis)
-      mtext(expression(Expected ~ ~-log[10](italic(p))), side=1, line=2.5)
-      mtext(expression(Observed ~ ~-log[10](italic(p))), side=2, line=2.5)
-      mtext(paste0("Inflation factor: ", sprintf("%1.2f",inflation_factor)), side=1, line=3.5)
-
-      res <- dev.off()
-      cat("DONE.\n")
-   }
-
    if (manhattan) {
       cat("Generating manhattan plot...")
       png(filename = paste0(file_prefix,".manhattan.png"),
@@ -119,4 +116,32 @@ mxr_manhattan <- function(gwas_results = "",
       cat("DONE.\n")
    }
 
+
+   #par(mar = mar, mgp = mgp)
+   if (qq) {
+      # Calculate inflation factor
+      # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
+      chisq <- qchisq(1 - data[, c(p)], 1)
+      inflation_factor <- median(chisq)/qchisq(0.5,1)
+
+      cat(paste0("Generating qq plot..."))
+      png(filename = paste0(file_prefix,".qq.png"),
+         width = width, height = height, units = unit, res=res)
+      par(mar=c(5,4,4,0)+.1, mgp=c(3,.8,0))
+      qq(data[, c(p)],
+                xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
+                cex.axis = cex.axis, yaxt="n",
+                main = main, xlab = "", ylab = "")
+      # abline(0,1)
+      axis(side=2, at = y_tickmarks, labels = y_tickmark_labels,
+           las=1, mgp = mgp, cex.axis = cex.axis)
+      mtext(expression(Expected ~ ~-log[10](italic(p))), side=1, line=2.5)
+      mtext(expression(Observed ~ ~-log[10](italic(p))), side=2, line=2.5)
+      mtext(paste0("Inflation factor: ", sprintf("%1.2f",inflation_factor)), side=1, line=3.5)
+
+      res <- dev.off()
+      cat("DONE.\n")
+   }
 }
+
+
