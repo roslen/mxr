@@ -99,7 +99,7 @@ mxr_manhattan <- function(gwas_results = "",
    if (qq) {
       # Calculate inflation factor
       # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
-      chisq <- qchisq(1-data[,c(p)], 1)
+      chisq <- qchisq(1-data$p, 1)
       inflation_factor <- median(chisq)/qchisq(0.5,1)
 
       cat(paste0("Generating qq plot..."))
