@@ -67,7 +67,7 @@ mxr_manhattan <- function(gwas_results = "",
    highlight <- highlight
 
 
-   par(mar = mar, mgp = mgp)
+   #par(mar = mar, mgp = mgp)
    if (qq) {
       # Calculate inflation factor
       # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
@@ -77,7 +77,7 @@ mxr_manhattan <- function(gwas_results = "",
       cat(paste0("Generating qq plot..."))
       png(filename = paste0(file_prefix,".qq.png"),
          width = width, height = height, units = unit, res=res)
-      #qqman::qq(data[, c(p)],
+      par(mar=c(5,4,4,0)+.1, mgp=c(3,.8,0))
       qqman::qq(data[, c(p)],
                 xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
                 cex.axis = cex.axis, yaxt="n",
@@ -97,6 +97,7 @@ mxr_manhattan <- function(gwas_results = "",
       cat("Generating manhattan plot...")
       png(filename = paste0(file_prefix,".manhattan.png"),
           width = width, height = height, units = unit, res=res)
+      par(mar=c(5,4,4,0)+.1, mgp=c(3,.8,0))
       qqman::manhattan(data,
                        chr = chr,
                        bp = bp,
@@ -117,7 +118,5 @@ mxr_manhattan <- function(gwas_results = "",
       res <- dev.off()
       cat("DONE.\n")
    }
-
-
 
 }
