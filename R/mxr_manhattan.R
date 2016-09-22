@@ -106,20 +106,17 @@ mxr_manhattan <- function(gwas_results = "",
       png(filename = paste0(file_prefix,".qq.png"),
          width = width, height = height, units = unit, res=res)
       par(mar = mar, mgp = mgp)
-      # qqman::qq(data[, c(p)],
-      #    xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
-      #    cex.axis = cex.axis, yaxt="n",
-      #    main = main, xlab = "", ylab = "")
-      #pvector <- data$p
-      #cat(length(pvector))
-      qqman::qq(data[, c(p)])
-
+      qqman::qq(data[, c(p)],
+                xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
+                cex.axis = cex.axis, yaxt="n",
+                main = main, xlab = "", ylab = "")
       # abline(0,1)
-      # axis(side=2, at = y_tickmarks, labels = y_tickmark_labels,
-      #      las=1, mgp = mgp, cex.axis = cex.axis)
-      # mtext(expression(Expected ~ ~-log[10](italic(p))), side=1, line=2.5)
-      # mtext(expression(Observed ~ ~-log[10](italic(p))), side=2, line=2.5)
-      # mtext(paste0("Inflation factor: ", sprintf("%1.2f",inflation_factor)), side=1, line=3.5)
+      axis(side=2, at = y_tickmarks, labels = y_tickmark_labels,
+           las=1, mgp = mgp, cex.axis = cex.axis)
+      mtext(expression(Expected ~ ~-log[10](italic(p))), side=1, line=2.5)
+      mtext(expression(Observed ~ ~-log[10](italic(p))), side=2, line=2.5)
+      mtext(paste0("Inflation factor: ", sprintf("%1.2f",inflation_factor)), side=1, line=3.5)
+
       res <- dev.off()
       cat("DONE.\n")
    }
