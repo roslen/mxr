@@ -64,9 +64,6 @@ mxr_manhattan <- function(gwas_results = "",
    # Set parameters based on the data
    genomewideline <- genomewide_line
    suggestiveline <- suggestive_line
-   ylim <-ylim
-   xlim <-ylim
-
    highlight <- highlight
 
 
@@ -99,7 +96,7 @@ mxr_manhattan <- function(gwas_results = "",
    if (qq) {
       # Calculate inflation factor
       # Reference: http://genometoolbox.blogspot.com/2014/08/how-to-calculate-genomic-inflation.html
-      chisq <- qchisq(1-data$p, 1)
+      chisq <- qchisq(1 - data[, c(p)], 1)
       inflation_factor <- median(chisq)/qchisq(0.5,1)
 
       cat(paste0("Generating qq plot..."))
@@ -107,7 +104,7 @@ mxr_manhattan <- function(gwas_results = "",
          width = width, height = height, units = unit, res=res)
       par(mar = mar, mgp = mgp)
       #qqman::qq(data[, c(p)],
-      qqman::qq(data$p,
+      qqman::qq(data[, c(p)],
                 xlim = c(0, xlim), ylim = c(0, ylim), las=1, bty="l",
                 cex.axis = cex.axis, yaxt="n",
                 main = main, xlab = "", ylab = "")
