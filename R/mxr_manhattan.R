@@ -111,6 +111,7 @@ mxr_manhattan <- function(gwas_results = "",
       #    cex.axis = cex.axis, yaxt="n",
       #    main = main, xlab = "", ylab = "")
       pvector <- data[,c(p)]
+      cat(length(pvector))
       qqman::qq(pvector)
 
       # abline(0,1)
