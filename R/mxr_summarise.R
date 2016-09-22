@@ -77,16 +77,26 @@ mxr_summarise <- function(trait = "",
                    error=function(e) NULL)
    cat("DONE.\n")
 
+   cat("Consolidating annotations...")
    if (!is.null(exn)) {
-      cat("Consolidating annotations...")
       res <- dplyr::left_join(var,
                               exn,
                               by = c("V3"="V4", "V4"="V5", "V5"="V6", "V6"="V7", "V7"="V8"))
       write.table(res, file = paste0(variant_function,".consolidated"),
                   append = F, quote = F,
                   sep = "\t", row.names = F, col.names = F)
-      cat("DONE.\n")
+   } else {
+      # Add 5 NA columns
+      var$V8 <- NA
+      var$V9 <- NA
+      var$V10 <- NA
+      var$V11 <- NA
+      var$V12 <- NA
+      write.table(var, file = paste0(variant_function,".consolidated"),
+                  append = F, quote = F,
+                  sep = "\t", row.names = F, col.names = F)
    }
+   cat("DONE.\n")
 
 
 
